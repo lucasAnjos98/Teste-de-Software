@@ -1,4 +1,4 @@
-// Exemplo de Teste de Integração de Componentes
+// Teste de Integração de Componentes
 // API + Database + Frontend Integration
 
 import request from 'supertest';
