@@ -1,4 +1,4 @@
-// Exemplo de Teste de API Completo
+// Teste de API Completo
 // Endpoint: POST /api/books - Cadastro de Livros
 
 import request from 'supertest';
