@@ -1,4 +1,4 @@
-// Exemplo de Teste Unitário com Mock
+// Teste Unitário com Mock
 // Sistema de Pontuação - Validação de Doação
 
 import { db } from '@/lib/db';
