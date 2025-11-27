@@ -1,0 +1,108 @@
+// Exemplo de Teste de Carga com Artillery
+// Configuração para testar performance da API BookShare
+
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [
+      {
+        "duration": 60,
+        "arrivalRate": 5,
+        "name": "Warm up"
+      },
+      {
+        "duration": 120,
+        "arrivalRate": 10,
+        "name": "Load test"
+      },
+      {
+        "duration": 60,
+        "arrivalRate": 50,
+        "name": "Stress test"
+      },
+      {
+        "duration": 120,
+        "arrivalRate": 100,
+        "name": "Peak test"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "name": "API Health Check",
+      "weight": 10,
+      "flow": [
+        {
+          "get": {
+            "url": "/api/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search Books",
+      "weight": 30,
+      "flow": [
+        {
+          "get": {
+            "url": "/api/books?search=senhor"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Register Book",
+      "weight": 25,
+      "flow": [
+        {
+          "post": {
+            "url": "/api/books",
+            "json": {
+              "title": "Livro Teste {{ $randomString() }}",
+              "author": "Autor Teste {{ $randomString() }}",
+              "description": "Descrição do livro de teste"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Borrow Book Flow",
+      "weight": 20,
+      "flow": [
+        {
+          "get": {
+            "url": "/api/books?status=AVAILABLE"
+          }
+        },
+        {
+          "think": 2
+        },
+        {
+          "post": {
+            "url": "/api/borrow",
+            "json": {
+              "bookId": "book-{{ $randomInt(1, 100) }}",
+              "borrowerId": "user-{{ $randomInt(1, 1000) }}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Authentication",
+      "weight": 15,
+      "flow": [
+        {
+          "post": {
+            "url": "/api/auth/login",
+            "json": {
+              "email": "user{{ $randomInt(1, 1000) }}@test.com",
+              "password": "password123"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
